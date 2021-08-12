@@ -76,31 +76,6 @@ async def missile(ctx):
         ctx.voice_client.stop()
         await played(ctx)
 
-    async def que(self, ctx):
-        global title
-        global quetitle
-        global duration
-
-        i = 0
-
-        if len(quetitle) > 0:
-            for x in quetitle:
-                if x == quetitle[0]:
-
-                    menit = quedur[i] // 60
-                    detik = quedur[i] % 60
-
-                    await ctx.send('> ' + x + ' ' + f'{menit}:{detik}' + ' ' + '< CURRENTLY PLAYING')
-                    i += 1
-                else:
-                    menit = quedur[i] // 60
-                    detik = quedur[i] % 60
-
-                    await ctx.send('> ' + x + ' ' + f'{menit}:{detik}')
-                    i += 1
-        elif len(quetitle) == 0:
-            await ctx.send('ga ada apa apa di queue')
-
 async def played(ctx):
     global playing
     global title
