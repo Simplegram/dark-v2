@@ -19,31 +19,6 @@ duration = 0
 
 playing = False
 
-async def que(ctx):
-    global title
-    global quetitle
-    global duration
-
-    i = 0
-
-    if len(quetitle) > 0:
-        for x in quetitle:
-            if x == quetitle[0]:
-
-                menit = quedur[i] // 60
-                detik = quedur[i] % 60
-
-                await ctx.send('> ' + x + ' ' + f'{menit}:{detik}' + ' ' + '< CURRENTLY PLAYING')
-                i += 1
-            else:
-                menit = quedur[i] // 60
-                detik = quedur[i] % 60
-
-                await ctx.send('> ' + x + ' ' + f'{menit}:{detik}')
-                i += 1
-    elif len(quetitle) == 0:
-        await ctx.send('ga ada apa apa di queue')
-
 async def ulangan():
     global repeat
 
@@ -75,31 +50,6 @@ async def missile(ctx):
     elif len(quelink) > 0:
         ctx.voice_client.stop()
         await played(ctx)
-
-    async def que(self, ctx):
-        global title
-        global quetitle
-        global duration
-
-        i = 0
-
-        if len(quetitle) > 0:
-            for x in quetitle:
-                if x == quetitle[0]:
-
-                    menit = quedur[i] // 60
-                    detik = quedur[i] % 60
-
-                    await ctx.send('> ' + x + ' ' + f'{menit}:{detik}' + ' ' + '< CURRENTLY PLAYING')
-                    i += 1
-                else:
-                    menit = quedur[i] // 60
-                    detik = quedur[i] % 60
-
-                    await ctx.send('> ' + x + ' ' + f'{menit}:{detik}')
-                    i += 1
-        elif len(quetitle) == 0:
-            await ctx.send('ga ada apa apa di queue')
 
 async def played(ctx):
     global playing
@@ -146,7 +96,7 @@ async def player_handler(ctx):
         embed = discord.Embed(title="Queued!", description=title)
         await ctx.send(embed=embed)
 
-async def load(ctx, word):
+async def load(word):
     global title
     global mus_format
     global duration
@@ -191,52 +141,46 @@ class music(commands.Cog):
         if not ctx.voice_client:
             channel = ctx.message.author.voice.channel
 
-            await asyncio.gather(channel.connect(), load(ctx. word))
+            await asyncio.gather(channel.connect(), load(word))
             await player_handler(ctx)
         elif ctx.voice_client:
-            await load(ctx, word)
+            await load(word)
             await player_handler(ctx)
         else:
             await ctx.send('masuk ke voice channel dulu dong!')
 
     @commands.command()
     async def remot(self, ctx):
-
         await ctx.send(
             'Magic Remote XM-1000:tm:',
             components=[
-                [Button(style=ButtonStyle.blue, label='pause'),
+                Button(style=ButtonStyle.blue, label='pause'),
                 Button(style=ButtonStyle.blue, label='play'),
                 Button(style=ButtonStyle.blue, label='skip'),
-                Button(style=ButtonStyle.red, label='clear')],
-                [Button(style=ButtonStyle.blue, label='repeat'),
-                Button(style=ButtonStyle.blue, label='queue')]
+                Button(style=ButtonStyle.blue, label='repeat'),
+                Button(style=ButtonStyle.red, label='clear'),
             ]
         )
 
-        pos = await self.client.wait_for('button_click')
-        if pos:
-            ctx.voice_client.pause(),
+        res = await self.client.wait_for("button_click")
+        if res:
+            ctx.voice_client.pause()
 
-        plei = await self.client.wait_for('button_click')
-        if plei:
+        res2 = await self.client.wait_for("button_click")
+        if res2:
             ctx.voice_client.resume()
 
-        sekip = await self.client.wait_for('button_click')
-        if sekip:
+        res3 = await self.client.wait_for("button_click")
+        if res3:
             await missile(ctx)
 
-        klir = await self.client.wait_for('button_click')
-        if klir:
-            await nuke(ctx)
-
-        ripit = await self.client.wait_for('button_click')
-        if ripit:
+        res4 = await self.client.wait_for("button_click")
+        if res4:
             await ulangan()
 
-        kyu = await self.client.wait_for('button_click')
-        if kyu:
-            await que(ctx)
+        res5 = await self.client.wait_for("button_click")
+        if res5:
+            await nuke(ctx)
 
     @commands.command()
     async def pergi(self, ctx):
@@ -247,6 +191,31 @@ class music(commands.Cog):
             await ctx.send('Ok gw pergi bos')
             await ctx.voice_client.disconnect()
 
+    @commands.command()
+    async def que(self, ctx):
+        global title
+        global quetitle
+        global duration
+
+        i = 0
+
+        if len(quetitle) > 0:
+            for x in quetitle:
+                if x == quetitle[0]:
+
+                    menit = quedur[i] // 60
+                    detik = quedur[i] % 60
+
+                    await ctx.send('> ' + x + ' ' + f'{menit}:{detik}' + ' ' + '< CURRENTLY PLAYING')
+                    i += 1
+                else:
+                    menit = quedur[i] // 60
+                    detik = quedur[i] % 60
+
+                    await ctx.send('> ' + x + ' ' + f'{menit}:{detik}')
+                    i += 1
+        elif len(quetitle) == 0:
+            await ctx.send('ga ada apa apa di queue')
 
 '''
     @yt.error
