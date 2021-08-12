@@ -26,7 +26,7 @@ warnung = ['tulis command nya yang bener dong',
           ]
 
 #Error Handler
-'''
+#'''
 @client.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
@@ -38,6 +38,5 @@ async def on_command_error(ctx, error):
         await ctx.send(random.choice(warnung))
         return
     raise error
-'''
-client.run('TOKEN') #Darkgloow
-#client.run('ODU0Mjk4ODgwNzkwODg4NDU5.YMh51Q.9ONXpSt0fEsTZtD_IYgR4liOLao') #Betagloow
+#'''
+client.run('TOKEN')
