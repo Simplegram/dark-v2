@@ -195,6 +195,7 @@ class music(commands.Cog):
                     i += 1
         elif len(quetitle) == 0:
             await ctx.send('ga ada apa apa di queue')
+
 '''
     @yt.error
     async def yt_error(self, ctx, error):
