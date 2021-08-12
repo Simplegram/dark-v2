@@ -39,5 +39,5 @@ async def on_command_error(ctx, error):
         return
     raise error
 '''
-client.run('ODE1Nzk0NjcxOTU1MzQ1NDM4.YDxl_g.dJa_4Uvovk9SRhc98tjJ9rjNdeg') #Darkgloow
+client.run('TOKEN') #Darkgloow
 #client.run('ODU0Mjk4ODgwNzkwODg4NDU5.YMh51Q.9ONXpSt0fEsTZtD_IYgR4liOLao') #Betagloow
