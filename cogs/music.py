@@ -10,8 +10,6 @@ quedur = []
 
 repeat = False
 
-client = discord.Client()
-
 title = ''
 mus_format = ''
 duration = 0
@@ -178,15 +176,23 @@ class music(commands.Cog):
         global quetitle
         global duration
 
-        menit = duration // 60
-        detik = duration % 60
+        i = 0
 
         if len(quetitle) > 0:
             for x in quetitle:
                 if x == quetitle[0]:
+
+                    menit = quedur[i] // 60
+                    detik = quedur[i] % 60
+
                     await ctx.send('> ' + x + ' ' + f'{menit}:{detik}' + ' ' + '< CURRENTLY PLAYING')
+                    i += 1
                 else:
+                    menit = quedur[i] // 60
+                    detik = quedur[i] % 60
+
                     await ctx.send('> ' + x + ' ' + f'{menit}:{detik}')
+                    i += 1
         elif len(quetitle) == 0:
             await ctx.send('ga ada apa apa di queue')
 '''
