@@ -17,6 +17,11 @@ title = ''
 mus_format = ''
 duration = 0
 
+msg = 0
+
+embed_play = discord.Embed(title='N/A')
+embed_edit = discord.Embed()
+
 playing = False
 
 async def ulangan():
@@ -39,17 +44,15 @@ async def nuke(ctx):
         quedur.clear()
 
 async def missile(ctx):
-    global quelink
     global quetitle
     global quedur
 
-    if ctx.voice_client.is_playing() and len(quelink) == 0:
+    if ctx.voice_client.is_playing() and len(quetitle) == 0:
         ctx.voice_client.stop()
-    elif len(quelink) == 0:
+    elif len(quetitle) == 0:
         await ctx.send('ga ada apa apa di queue')
-    elif len(quelink) > 0:
+    elif len(quetitle) > 0:
         ctx.voice_client.stop()
-        await played(ctx)
 
 async def played(ctx):
     global playing
@@ -74,12 +77,26 @@ async def played(ctx):
     await player_handler(ctx)
 
 async def send_playing(ctx):
-    embed = discord.Embed(title="Playing now:", description=title)
-    await ctx.send(embed=embed)
+    global embed_play
+    global embed_edit
+    global playing
+    global msg
+    global quetitle
+
+    if playing == False:
+        embed_play = discord.Embed(title="Playing now:", description=title)
+        await msg.edit(embed=embed_play)
+    elif playing == True:
+        embed_edit = discord.Embed(title="Queued!", description=title)
+        await msg.edit(embed=embed_edit)
+        await asyncio.sleep(2)
+        embed_play = discord.Embed(title="Playing now:", description=quetitle[0])
+        await msg.edit(embed=embed_play)
 
 async def player_handler(ctx):
     global playing
     global duration
+    global msg
 
     loop = asyncio.get_event_loop()
 
@@ -87,14 +104,14 @@ async def player_handler(ctx):
                       'options': '-vn'}
 
     if playing == False and len(quelink) > 0 and not ctx.voice_client.is_playing():
+        await send_playing(ctx)
         playing = True
         ctx.voice_client.play(discord.FFmpegPCMAudio(mus_format, **FFMPEG_OPTIONS), after=lambda e:asyncio.run_coroutine_threadsafe(played(ctx), loop))
-        await send_playing(ctx)
     elif playing == False and len(quelink) == 0:
-        await ctx.send('queue abis!')
+        embed = discord.Embed(title='Queue abis')
+        await msg.edit(embed=embed)
     elif playing == True:
-        embed = discord.Embed(title="Queued!", description=title)
-        await ctx.send(embed=embed)
+        await send_playing(ctx)
 
 async def load(word):
     global title
@@ -136,51 +153,22 @@ class music(commands.Cog):
     @commands.command()
     async def yt(self, ctx, *args):
         global playing
+        global msg
+
         word = ' '.join(args)
 
         if not ctx.voice_client:
             channel = ctx.message.author.voice.channel
 
             await asyncio.gather(channel.connect(), load(word))
+            msg = await ctx.send(embed=embed_play)
             await player_handler(ctx)
         elif ctx.voice_client:
             await load(word)
+            await ctx.message.delete()
             await player_handler(ctx)
         else:
             await ctx.send('masuk ke voice channel dulu dong!')
-
-    @commands.command()
-    async def remot(self, ctx):
-        await ctx.send(
-            'Magic Remote XM-1000:tm:',
-            components=[
-                Button(style=ButtonStyle.blue, label='pause'),
-                Button(style=ButtonStyle.blue, label='play'),
-                Button(style=ButtonStyle.blue, label='skip'),
-                Button(style=ButtonStyle.blue, label='repeat'),
-                Button(style=ButtonStyle.red, label='clear'),
-            ]
-        )
-
-        res = await self.client.wait_for("button_click")
-        if res:
-            ctx.voice_client.pause()
-
-        res2 = await self.client.wait_for("button_click")
-        if res2:
-            ctx.voice_client.resume()
-
-        res3 = await self.client.wait_for("button_click")
-        if res3:
-            await missile(ctx)
-
-        res4 = await self.client.wait_for("button_click")
-        if res4:
-            await ulangan()
-
-        res5 = await self.client.wait_for("button_click")
-        if res5:
-            await nuke(ctx)
 
     @commands.command()
     async def pergi(self, ctx):
@@ -190,6 +178,25 @@ class music(commands.Cog):
             await nuke(ctx)
             await ctx.send('Ok gw pergi bos')
             await ctx.voice_client.disconnect()
+
+    @commands.command()
+    async def brenti(self, ctx):
+        await ctx.message.delete()
+        ctx.voice_client.pause()
+
+    @commands.command()
+    async def lanjut(self, ctx):
+        await ctx.message.delete()
+        ctx.voice_client.resume()
+
+    @commands.command()
+    async def sekip(self, ctx):
+        await ctx.message.delete()
+        await missile(ctx)
+
+    @commands.command()
+    async def klir(self, ctx):
+        await nuke(ctx)
 
     @commands.command()
     async def que(self, ctx):
