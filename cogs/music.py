@@ -22,7 +22,33 @@ msg = 0
 embed_play = discord.Embed(title='N/A')
 embed_edit = discord.Embed()
 
+pcode = 22283
+link = f'https://{pcode}.live.streamtheworld.com/PRAMBORS_FM.mp3'
+
+loop = asyncio.get_event_loop()
+
 playing = False
+
+async def load_prambors(ctx):
+    global quelink
+    global quetitle
+    global quedur
+
+    global mus_format
+    global title
+    global duration
+
+    global link
+
+    mus_format = link
+    title = 'PramborsFM'
+    duration = 599940
+
+    quelink.append(mus_format)
+    quetitle.append(title)
+    quedur.append(duration)
+
+    await player_handler(ctx)
 
 async def ulangan():
     global repeat
@@ -45,13 +71,14 @@ async def nuke(ctx):
 
 async def missile(ctx):
     global quetitle
-    global quedur
 
     if ctx.voice_client.is_playing() and len(quetitle) == 0:
         ctx.voice_client.stop()
     elif len(quetitle) == 0:
         await ctx.send('ga ada apa apa di queue')
     elif len(quetitle) > 0:
+        ctx.voice_client.pause()
+        await asyncio.sleep(3)
         ctx.voice_client.stop()
 
 async def played(ctx):
@@ -96,20 +123,23 @@ async def send_playing(ctx):
 async def player_handler(ctx):
     global playing
     global duration
+    global quetitle
+    global loop
     global msg
-
-    loop = asyncio.get_event_loop()
 
     FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
                       'options': '-vn'}
 
-    if playing == False and len(quelink) > 0 and not ctx.voice_client.is_playing():
+    if playing == False and len(quetitle) > 0:
         await send_playing(ctx)
+        ctx.voice_client.play(discord.FFmpegPCMAudio(mus_format, **FFMPEG_OPTIONS),
+                              after=lambda e: asyncio.run_coroutine_threadsafe(played(ctx), loop))
         playing = True
-        ctx.voice_client.play(discord.FFmpegPCMAudio(mus_format, **FFMPEG_OPTIONS), after=lambda e:asyncio.run_coroutine_threadsafe(played(ctx), loop))
-    elif playing == False and len(quelink) == 0:
+    elif playing == False and len(quetitle) == 0:
         embed = discord.Embed(title='Queue abis')
         await msg.edit(embed=embed)
+        await asyncio.sleep(2)
+        await msg.delete()
     elif playing == True:
         await send_playing(ctx)
 
@@ -155,20 +185,35 @@ class music(commands.Cog):
         global playing
         global msg
 
+        await ctx.message.delete()
+
         word = ' '.join(args)
 
         if not ctx.voice_client:
             channel = ctx.message.author.voice.channel
-
             await asyncio.gather(channel.connect(), load(word))
             msg = await ctx.send(embed=embed_play)
             await player_handler(ctx)
         elif ctx.voice_client:
             await load(word)
-            await ctx.message.delete()
             await player_handler(ctx)
         else:
-            await ctx.send('masuk ke voice channel dulu dong!')
+            await ctx.send('lu masuk ke voice channel dulu dong!')
+
+    @commands.command()
+    async def prambors(self, ctx):
+        global msg
+
+        channel = ctx.message.author.voice.channel
+
+        await ctx.message.delete()
+
+        if not ctx.voice_client:
+            vc = await channel.connect()
+            msg = await ctx.send(embed=embed_play)
+            await load_prambors(ctx)
+        elif ctx.voice_client:
+            await load_prambors(ctx)
 
     @commands.command()
     async def pergi(self, ctx):
@@ -196,6 +241,7 @@ class music(commands.Cog):
 
     @commands.command()
     async def klir(self, ctx):
+        await ctx.message.delete()
         await nuke(ctx)
 
     @commands.command()
@@ -204,32 +250,34 @@ class music(commands.Cog):
         global quetitle
         global duration
 
+        await ctx.message.delete()
+
         i = 0
 
         if len(quetitle) > 0:
+            embed = discord.Embed()
             for x in quetitle:
                 if x == quetitle[0]:
 
                     menit = quedur[i] // 60
                     detik = quedur[i] % 60
 
-                    await ctx.send('> ' + x + ' ' + f'{menit}:{detik}' + ' ' + '< CURRENTLY PLAYING')
+                    embed.add_field(name='Currently Playing' ,value='> ' + x + ' ' + f'{menit}:{detik}')
                     i += 1
                 else:
                     menit = quedur[i] // 60
                     detik = quedur[i] % 60
 
-                    await ctx.send('> ' + x + ' ' + f'{menit}:{detik}')
+                    embed.add_field(name=i, value='> ' + x + ' ' + f'{menit}:{detik}')
                     i += 1
-        elif len(quetitle) == 0:
-            await ctx.send('ga ada apa apa di queue')
 
-'''
-    @yt.error
-    async def yt_error(self, ctx, error):
-        if isinstance(error, commands.CommandInvokeError):
-            await ctx.send('masukin judul lagu yang mau di puter dong')
-'''
+            quebed = await ctx.send(embed=embed)
+            await asyncio.sleep(6)
+            await quebed.delete()
+        elif len(quetitle) == 0:
+            mesg = await ctx.send('ga ada apa apa di queue')
+            await asyncio.sleep(3)
+            await mesg.delete()
 
 def setup(client):
     client.add_cog(music(client)) 
