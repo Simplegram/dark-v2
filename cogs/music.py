@@ -18,6 +18,7 @@ mus_format = ''
 duration = 0
 
 msg = 0
+qgone = True
 
 embed_play = discord.Embed(title='N/A')
 embed_edit = discord.Embed()
@@ -138,8 +139,9 @@ async def player_handler(ctx):
     elif playing == False and len(quetitle) == 0:
         embed = discord.Embed(title='Queue abis')
         await msg.edit(embed=embed)
-        await asyncio.sleep(2)
+        await asyncio.sleep(0.5)
         await msg.delete()
+        qgon = True
     elif playing == True:
         await send_playing(ctx)
 
@@ -184,6 +186,7 @@ class music(commands.Cog):
     async def yt(self, ctx, *args):
         global playing
         global msg
+        global qgone
 
         await ctx.message.delete()
 
@@ -195,6 +198,8 @@ class music(commands.Cog):
             msg = await ctx.send(embed=embed_play)
             await player_handler(ctx)
         elif ctx.voice_client:
+            if qgone == True:
+                msg = await ctx.send(embed=embed_play)
             await load(word)
             await player_handler(ctx)
         else:
@@ -213,6 +218,8 @@ class music(commands.Cog):
             msg = await ctx.send(embed=embed_play)
             await load_prambors(ctx)
         elif ctx.voice_client:
+            if qgone == True:
+                msg = await ctx.send(embed=embed_play)
             await load_prambors(ctx)
 
     @commands.command()
