@@ -11,7 +11,7 @@ Discord music bot powered by discord.py and lavalink
    - vol 50 
  - ff (input in second)
    - ff 20
- - pos | Current song timestamp (in second)
+ - pos (Current song timestamp in second)
  - brenti
  - lanjut
  - sekip
