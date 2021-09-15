@@ -4,7 +4,7 @@ Discord music bot powered by discord.py and lavalink
 # **How to use**
  
  ### Music: 
- - yt
+ - yt (input in keyword or url)
    - yt https://youtu.be/dQw4w9WgXcQ 
    - yt Rick Astley - Never Gonna Give You Up (Official Music Video)
  - vol (0 - 1000,  normal volume = 100) 
