@@ -22,9 +22,9 @@ Discord music bot powered by discord.py and lavalink
 
 # **Sidenote**
 
-  Currently this bot is only for private use only. I'm too lazy to make it public capable. 
-
-  1. Can't handle multiple servers. One server only. Restart the bot if you want to use it on a different server.
-  2. Very unstable should it be used by anyone else other than me.
+  1. Currently this bot is only for private use only. I'm too lazy to make it public capable. 
+  2. Rejoin voice channel after every bot restart.
+  3. Can't handle multiple servers. One server only. Restart the bot if you want to use it on a different server.
+  4. Very unstable should it be used by anyone else other than me.
 
   No outside use without my permission.
