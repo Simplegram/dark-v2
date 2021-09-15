@@ -1,8 +1,8 @@
 # dark-v2
 A remake of the original Darkgloow bot code
 
-Discord bot with discord.py 
+Discord music bot powered by discord.py and lavalink
 
-Multi-purpose bot just for fun
+Currently this bot is only for private use only. It can't handle multiple servers. I'm too lazy to make it public capable.
 
-No code copying without permission!
+
