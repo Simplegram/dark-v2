@@ -4,11 +4,15 @@ Discord music bot powered by discord.py and lavalink
 # **How to use**
  
  ### Music: 
- - yt \[input\] | ex: yt https://youtu.be/dQw4w9WgXcQ or yt Rick Astley - Never Gonna Give You Up (Official Music Video)
- - vol \[input\] | 0 - 1000,  normal volume = 100 | ex: vol 50
- - ff \[input\] | input in second | ex: ff 20
+ - yt \[input\]
+   - yt https://youtu.be/dQw4w9WgXcQ 
+   - yt Rick Astley - Never Gonna Give You Up (Official Music Video)
+ - vol \[input\] | 0 - 1000,  normal volume = 100 
+   - vol 50
+ - ff \[input\] | input in second
+   - ex: ff 20
  - pos | Current song timestamp (in second)
- - brenti |
+ - brenti
  - lanjut
  - sekip
  - klir
