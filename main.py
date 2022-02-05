@@ -66,5 +66,4 @@ async def on_command_error(ctx, error):
         return
     raise error
 #'''
-client.run('ODE1Nzk0NjcxOTU1MzQ1NDM4.YDxl_g.FDV0OnN1ijG5DPxYopKU7UzD_gc') #Darkgloow
-#client.run('ODU0Mjk4ODgwNzkwODg4NDU5.YMh51Q.zkaVJpPDqYvHzX8qdEsS7vlQ42w') #Betagloow
+client.run('your_code_here')
